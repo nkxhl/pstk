@@ -39,6 +39,9 @@ ui_new.xml
 
 # ===== 其他无需提交的文件 =====
 minimax_openai_api.txt
-*.apk
 *.aab
 *.ap_
+
+# APK：忽略构建输出，但保留 releases/ 目录下的发布包
+*.apk
+!releases/*.apk
