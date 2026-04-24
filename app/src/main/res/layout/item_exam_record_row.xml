@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:gravity="center_vertical"
+	android:paddingHorizontal="14dp"
+	android:paddingVertical="12dp"
+	android:background="?attr/selectableItemBackground"
+	android:clickable="true"
+	android:focusable="true">
+
+	<!-- 左侧：模式标签 -->
+	<TextView
+		android:id="@+id/tvRecordMode"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:gravity="center"
+		android:textSize="11sp"
+		android:textStyle="bold"
+		android:textColor="@android:color/white"
+		android:background="@drawable/bg_icon_circle" />
+
+	<!-- 中间：题库名 + 详情 -->
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:orientation="vertical"
+		android:layout_marginStart="12dp"
+		android:layout_marginEnd="8dp">
+
+		<TextView
+			android:id="@+id/tvRecordBankName"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="14sp"
+			android:textStyle="bold"
+			android:textColor="@color/text_primary"
+			android:ellipsize="end"
+			android:maxLines="1" />
+
+		<TextView
+			android:id="@+id/tvRecordMeta"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="3dp"
+			android:textSize="11sp"
+			android:textColor="@color/text_hint" />
+	</LinearLayout>
+
+	<!-- 右侧：得分 -->
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:gravity="end">
+
+		<TextView
+			android:id="@+id/tvRecordScore"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="22sp"
+			android:textStyle="bold"
+			android:textColor="@color/primary" />
+
+		<TextView
+			android:id="@+id/tvRecordScoreLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="分"
+			android:textSize="10sp"
+			android:textColor="@color/text_hint"
+			android:gravity="end" />
+	</LinearLayout>
+
+</LinearLayout>

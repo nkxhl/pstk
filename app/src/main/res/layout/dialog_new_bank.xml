@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="新建题库"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 识别模式选择 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="识别模式"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="8dp" />
+
+    <RadioGroup
+        android:id="@+id/rgInputMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <RadioButton
+            android:id="@+id/rbModeOcr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📄 普通文本"
+            android:textSize="13sp"
+            android:checked="true"
+            android:buttonTint="@color/primary" />
+        <RadioButton
+            android:id="@+id/rbModeVision"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="🔢 图表公式"
+            android:textSize="13sp"
+            android:buttonTint="@color/primary" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvModeHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="普通文本：先OCR识别再生成，速度快；适合文字为主的课本"
+        android:textSize="11sp"
+        android:textColor="@color/text_hint"
+        android:layout_marginBottom="14dp" />
+
+    <!-- 文件选择和拍照区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical">
+
+        <!-- 选择文件按钮 -->
+        <LinearLayout
+            android:id="@+id/layoutImagePicker"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_image_select"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&#128247;"
+                android:textSize="22sp"
+                android:layout_marginEnd="8dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvSelectedImages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="选择文件"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary" />
+                <TextView
+                    android:id="@+id/tvFileTypeHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="图片/PDF/WORD/TXT/MD"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 拍照按钮 -->
+        <LinearLayout
+            android:id="@+id/layoutCamera"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_image_select"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&#128253;"
+                android:textSize="24sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拍照"
+                android:textSize="11sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBankName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="题库名称"
+        style="@style/Widget.SmartQuiz.TextInput">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etBankName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:imeOptions="actionNext" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 科目：可下拉选择也可自行输入 -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="科目（可选）"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <AutoCompleteTextView
+            android:id="@+id/etSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:completionThreshold="0" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="题目数量（默认20，最多50）"
+        style="@style/Widget.SmartQuiz.TextInput">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etQuestionCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:imeOptions="actionNext" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 出题要求（可选） -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="题目类型"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:id="@+id/layoutQuestionTypes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <CheckBox
+            android:id="@+id/cbTypeSingle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单选"
+            android:checked="true"
+            android:buttonTint="@color/primary"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/cbTypeMultiple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="多选"
+            android:checked="true"
+            android:buttonTint="@color/primary"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/cbTypeTrueFalse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="判断"
+            android:checked="true"
+            android:buttonTint="@color/primary"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/cbTypeFillBlank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="填空"
+            android:checked="false"
+            android:buttonTint="@color/primary"
+            android:layout_marginEnd="8dp"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/cbTypeShortAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="问答"
+            android:checked="false"
+            android:buttonTint="@color/primary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- 出题要求补充（可选） -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:hint="出题要求（可选，将附加到提示词）"
+        style="@style/Widget.SmartQuiz.TextInput">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etExtraPrompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:maxLines="4"
+            android:gravity="top"
+            android:imeOptions="actionDone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="取消"
+            android:textSize="15sp"
+            style="@style/Widget.SmartQuiz.Button.Outlined" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmGenerate"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="开始生成"
+            android:textSize="15sp"
+            style="@style/Widget.SmartQuiz.Button" />
+    </LinearLayout>
+
+</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

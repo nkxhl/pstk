@@ -1,0 +1,44 @@
+# ===== 安全敏感文件 =====
+local.properties
+*.jks
+*.keystore
+*.p12
+*.pfx
+key.properties
+keystore.properties
+
+# ===== Gradle 构建缓存 =====
+.gradle/
+build/
+app/build/
+
+# ===== UI 自动化测试快照（调试用临时文件）=====
+ui*.xml
+uiafter.xml
+uiback.xml
+uicheck.xml
+uifinal.xml
+uinew.xml
+uipicker.xml
+uiresult.xml
+uisel.xml
+uisel2.xml
+uiwait.xml
+uiwait2.xml
+ui_dump.xml
+ui_dump2.xml
+ui_dump3.xml
+ui_dump4.xml
+ui_dump6.xml
+ui_dump7.xml
+ui_dump8.xml
+ui_final.xml
+ui_key.xml
+ui_m27.xml
+ui_new.xml
+
+# ===== 其他无需提交的文件 =====
+minimax_openai_api.txt
+*.apk
+*.aab
+*.ap_

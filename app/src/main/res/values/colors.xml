@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="primary">#5C6BC0</color>
+    <color name="primary_dark">#3949AB</color>
+    <color name="primary_light">#E8EAF6</color>
+    <color name="primary_gradient_start">#5C6BC0</color>
+    <color name="primary_gradient_end">#7E57C2</color>
+    <color name="accent">#FF7043</color>
+    <color name="accent_light">#FBE9E7</color>
+    <!-- Text -->
+    <color name="text_primary">#1C1B1F</color>
+    <color name="text_secondary">#49454F</color>
+    <color name="text_hint">#938F99</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <!-- Surfaces -->
+    <color name="background">#F4F4F8</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F1F0F7</color>
+    <color name="surface_container">#EEEDF4</color>
+    <!-- Status -->
+    <color name="error">#E53935</color>
+    <color name="error_light">#FFEBEE</color>
+    <color name="success">#43A047</color>
+    <color name="success_light">#E8F5E9</color>
+    <color name="success_dark">#2E7D32</color>
+    <color name="warning">#FB8C00</color>
+    <color name="warning_light">#FFF3E0</color>
+    <!-- Misc -->
+    <color name="divider">#E6E1E5</color>
+    <color name="card_stroke">#E6E1E5</color>
+    <color name="overlay">#52000000</color>
+    <!-- Nav bar -->
+    <color name="nav_bar_bg">#FFFFFF</color>
+    <color name="nav_indicator">#E8EAF6</color>
+</resources>

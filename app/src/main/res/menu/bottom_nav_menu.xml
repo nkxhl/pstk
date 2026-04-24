@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_banks"
+        android:icon="@drawable/ic_nav_banks"
+        android:title="题库" />
+    <item
+        android:id="@+id/nav_students"
+        android:icon="@drawable/ic_nav_students"
+        android:title="学生" />
+    <item
+        android:id="@+id/nav_exam"
+        android:icon="@drawable/ic_nav_exam"
+        android:title="考试" />
+    <item
+        android:id="@+id/nav_report"
+        android:icon="@drawable/ic_nav_report"
+        android:title="报表" />
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_nav_settings"
+        android:title="设置" />
+</menu>

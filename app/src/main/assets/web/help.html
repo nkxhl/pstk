@@ -1,0 +1,715 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>帮助文档</title>
+<style>
+:root {
+  --pri:   #5C6BC0;
+  --pri2:  #7E57C2;
+  --pri-d: #3949AB;
+  --pri-l: #E8EAF6;
+  --acc:   #FF7043;
+  --grn:   #43A047;
+  --grn-l: #E8F5E9;
+  --txt:   #1C1B1F;
+  --txt2:  #555;
+  --bg:    #F2F3FA;
+  --card:  #fff;
+  --bdr:   #EAECF5;
+  --r:     14px;
+  --sh:    0 2px 10px rgba(92,107,192,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--txt);font-size:15px;line-height:1.75}
+.banner{background:linear-gradient(135deg,var(--pri) 0%,var(--pri2) 100%);
+  padding:40px 20px 32px;text-align:center;color:#fff}
+.banner-icon{font-size:56px;display:block;margin-bottom:12px;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
+.banner h1{font-size:23px;font-weight:700;letter-spacing:.5px}
+.banner p{font-size:13px;opacity:.85;margin-top:6px}
+.tab-bar{display:flex;background:#fff;border-bottom:1px solid var(--bdr);
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(92,107,192,.08)}
+.tab-btn{flex:1;padding:12px 2px;font-size:12.5px;font-weight:600;text-align:center;
+  color:var(--txt2);border:none;background:none;cursor:pointer;
+  border-bottom:3px solid transparent;transition:all .2s}
+.tab-btn.active{color:var(--pri);border-bottom-color:var(--pri)}
+.tab-pane{display:none;padding-bottom:32px}
+.tab-pane.active{display:block}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);
+  margin:14px 14px 0;overflow:hidden}
+.sec-label{font-size:12px;font-weight:700;color:var(--pri);letter-spacing:.9px;
+  text-transform:uppercase;padding:16px 16px 8px}
+.acc-item{border-bottom:1px solid var(--bdr)}
+.acc-item:last-child{border-bottom:none}
+.acc-hd{display:flex;align-items:center;padding:13px 16px;cursor:pointer;
+  transition:background .15s;user-select:none}
+.acc-hd:active{background:var(--pri-l)}
+.acc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;margin-right:12px}
+.acc-meta{flex:1}
+.acc-name{font-size:15px;font-weight:600;color:var(--txt)}
+.acc-sub{font-size:12px;color:var(--txt2);margin-top:2px}
+.acc-arr{color:#bbb;font-size:18px;transition:transform .22s}
+.acc-bd{display:none;background:var(--pri-l);padding:10px 16px 14px 66px;
+  border-bottom:1px solid #dde0f5}
+.acc-bd.open{display:block}
+.acc-hd.open .acc-arr{transform:rotate(90deg);color:var(--pri)}
+.acc-bd ul{padding-left:16px}
+.acc-bd li{font-size:13px;color:var(--txt2);margin:5px 0}
+.acc-bd li strong{color:var(--pri-d)}
+.acc-bd li code{background:#e8eaf6;border-radius:4px;padding:1px 5px;
+  font-size:12px;font-family:monospace}
+.steps{padding:6px 16px 16px}
+.step{display:flex;align-items:flex-start;margin:10px 0;font-size:13.5px;color:var(--txt2)}
+.step-n{background:var(--pri);color:#fff;border-radius:50%;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  flex-shrink:0;margin-right:10px;margin-top:2px}
+.step strong{color:var(--txt)}
+.faq-item{border-bottom:1px solid var(--bdr);cursor:pointer}
+.faq-item:last-child{border-bottom:none}
+.faq-hd{display:flex;align-items:center;padding:13px 16px;gap:8px;user-select:none}
+.faq-q-tag{background:var(--acc);color:#fff;font-size:11px;font-weight:700;
+  border-radius:5px;padding:2px 7px;flex-shrink:0}
+.faq-q-text{flex:1;font-size:14px;font-weight:600;color:var(--txt)}
+.faq-arr{color:#bbb;font-size:16px;transition:transform .2s}
+.faq-bd{display:none;font-size:13px;color:var(--txt2);
+  padding:2px 16px 14px 56px;line-height:1.7}
+.faq-item.open .faq-bd{display:block}
+.faq-item.open .faq-arr{transform:rotate(90deg)}
+.tip{margin:12px 14px 0;border-radius:10px;padding:11px 14px;font-size:13px}
+.tip-info{background:#E3F2FD;border-left:4px solid #1E88E5;color:#1565C0}
+.tip-warn{background:#FFF8E1;border-left:4px solid #FFB300;color:#795548}
+.tip-ok{background:var(--grn-l);border-left:4px solid var(--grn);color:#2E7D32}
+.tip strong{font-weight:700}
+.contact-row{display:flex;align-items:center;padding:13px 16px;
+  border-bottom:1px solid var(--bdr)}
+.contact-row:last-child{border-bottom:none}
+.c-ico{font-size:20px;margin-right:10px}
+.c-lbl{color:var(--txt2);font-size:13px;width:68px;flex-shrink:0}
+.c-val{color:var(--pri-d);font-weight:600;font-size:14px;word-break:break-all}
+.c-val a{color:var(--pri-d);text-decoration:none}
+.c-val a:active{opacity:.7}
+.onboard-role{display:flex;gap:12px;padding:14px 16px;justify-content:center}
+.role-btn{flex:1;border:2px solid var(--bdr);border-radius:12px;padding:14px 8px;
+  text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--txt2)}
+.role-btn.active{border-color:var(--pri);background:var(--pri-l);color:var(--pri);font-weight:700}
+.role-btn .r-ico{font-size:28px;display:block;margin-bottom:6px}
+.role-guide{padding:0 16px 16px}
+.role-guide[hidden]{display:none}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;
+  border-radius:20px;padding:2px 9px;margin-bottom:4px}
+.badge-t{background:#E8EAF6;color:var(--pri-d)}
+.badge-s{background:#E8F5E9;color:#2E7D32}
+.bottom-space{height:20px}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span class="banner-icon">📚</span>
+  <h1>拍书题库 · 使用帮助</h1>
+  <p>AI 智能生成题目，高效备考利器 · pstk.inc.work</p>
+  <div style="margin-top:16px">
+    <button onclick="shareApk()" style="background:rgba(255,255,255,0.22);border:1.5px solid rgba(255,255,255,0.6);color:#fff;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:600;cursor:pointer;margin-right:8px">📦 分享安装包</button>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('beginner',this)">🚀 新手入门</button>
+  <button class="tab-btn" onclick="switchTab('teacher',this)">🎓 教学端</button>
+  <button class="tab-btn" onclick="switchTab('student',this)">📖 学生端</button>
+  <button class="tab-btn" onclick="switchTab('faq',this)">❓ 常见问题</button>
+</div>
+
+<!-- ══════ TAB 1 新手入门 ══════ -->
+<div id="tab-beginner" class="tab-pane active">
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">软件简介</div>
+    <div style="padding:0 16px 16px;font-size:14px;color:var(--txt2)">
+      <strong style="color:var(--txt)">拍书题库</strong> 是一款 AI 驱动的智能题库工具。<br><br>
+      教师只需拍一张课本照片或上传 PDF / Word 文档，AI 即可自动提取内容并生成题库，并可以使用题库生成试卷，还支持教师间相互分享题库。<br><br>
+      学生端（同一WIFI下或局域网中）通过扫码或网址，即可完成在线练习和考试，<strong>教师无需部署服务器，学生也无需安装任何软件</strong>，做题和考试同时还支持离线使用，在无网络的手机或电脑中也可做题或考试。
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">我的角色</div>
+    <div class="onboard-role">
+      <div class="role-btn active" id="roleTeacher" onclick="switchRole('teacher')">
+        <span class="r-ico">🎓</span>教师 / 出题者
+      </div>
+      <div class="role-btn" id="roleStudent" onclick="switchRole('student')">
+        <span class="r-ico">📖</span>学生 / 答题者
+      </div>
+    </div>
+    <div class="role-guide" id="guideTeacher">
+      <span class="badge badge-t">🎓 教学端 · 5 步快速上手</span>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><span>进入 <strong>「设置」</strong> → 「AI 配置」，填写 <strong>API Key</strong> 和模型名称（首次必做）</span></div>
+        <div class="step"><div class="step-n">2</div><span>进入 <strong>「题库」</strong>，点击右下角 <strong>＋</strong>，上传课本 PDF / 图片或直接拍照</span></div>
+        <div class="step"><div class="step-n">3</div><span>填写题库名称、科目、题目数量，点击 <strong>「开始生成」</strong>，等待 AI 出题</span></div>
+        <div class="step"><div class="step-n">4</div><span>进入 <strong>「设置」</strong> → 开启本地服务器，把二维码或链接分享给学生</span></div>
+        <div class="step"><div class="step-n">5</div><span>在 <strong>「考试」</strong> 页发布指定考试或 <strong>抢答比赛</strong>；在 <strong>「报告」</strong> 页查看成绩和排名</span></div>
+      </div>
+    </div>
+    <div class="role-guide" id="guideStudent" hidden>
+      <span class="badge badge-s">📖 学生端 · 5 步快速上手</span>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><span>从老师处获取 <strong>网址或二维码</strong>，用手机 / 电脑浏览器打开</span></div>
+        <div class="step"><div class="step-n">2</div><span>点击 <strong>「注册」</strong>，填写真实姓名、学号、班级，设置密码</span></div>
+        <div class="step"><div class="step-n">3</div><span>登录后，若老师已发布考试会 <strong>自动跳转到指定考试</strong>；否则自由选题库练习</span></div>
+        <div class="step"><div class="step-n">4</div><span>练习答错的题自动进入 <strong>错题本</strong>，可在「错题重练」中专项复习</span></div>
+        <div class="step"><div class="step-n">5</div><span>考试结束后查看 <strong>成绩单和排名</strong>，每题有答案解析供复习</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip tip-info" style="margin-top:14px">💡 <strong>教师提示：</strong>含数学公式或图表的课本，新建时请选「<strong>图表公式模式</strong>」，识别更准确。</div>
+  <div class="tip tip-ok" style="margin-top:10px">✅ <strong>学生提示：</strong>无需安装 App，用浏览器扫码即可在线答题，支持练习和考试两种模式。</div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ══════ TAB 2 教学端 ══════ -->
+<div id="tab-teacher" class="tab-pane">
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">第一步：配置 AI (用于使用AI创建题库)</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><span>进入底部 <strong>「设置」</strong> → 「AI 配置」卡片</span></div>
+      <div class="step"><div class="step-n">2</div><span>填写 <strong>API Key</strong>（支持 OpenAI、DeepSeek、通义千问等兼容接口，自行在相应平台购买或联系作者购买）</span></div>
+      <div class="step"><div class="step-n">3</div><span>填写 <strong>Base URL</strong>（使用国内中转或非 OpenAI 服务时必填）</span></div>
+      <div class="step"><div class="step-n">4</div><span>填写 <strong>文本模型</strong> 名称（出题用）和 <strong>视觉模型</strong> 名称（图表公式模式用）</span></div>
+      <div class="step"><div class="step-n">5</div><span>填写 <strong>系统提示词（可选）</strong>：自定义出题风格，如「只出高考难度，计算题占 30%」</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">题库管理</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8EAF6">📖</div>
+        <div class="acc-meta"><div class="acc-name">新建题库</div><div class="acc-sub">上传文档或拍照，AI 自动生成题目</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>点击「题库」页右下角 <strong>＋</strong> 按钮</li>
+        <li>支持文件：<strong>PDF、Word（.doc/.docx）、TXT、Markdown、图片（JPG/PNG 等）</strong></li>
+        <li>可同时选择 <strong>多个文件</strong>，AI 合并识别后统一出题</li>
+        <li>也可直接 <strong>拍照</strong>，适合纸质课本和白板内容</li>
+        <li>或在其他 App 中把文件 <strong>分享给拍书题库</strong>，自动触发出题流程</li>
+        <li>填写题库名称（必填）、科目、出题数量、附加要求（可选）</li>
+        <li><strong>普通文本模式</strong>：先 OCR 识别文字再生成，速度快，适合文字为主的教材</li>
+        <li><strong>图表公式模式</strong>：图片直接发给 AI 视觉模型，精准识别数学公式、表格、图示</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E3F2FD">➕</div>
+        <div class="acc-meta"><div class="acc-name">追加题目</div><div class="acc-sub">向已有题库继续添加新题</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>长按题库卡片 → 「<strong>继续添加题目</strong>」，或进入题库详情点击「添加更多」</li>
+        <li>上传新文件后，AI 生成的题目追加到该题库</li>
+        <li>分享文件到拍书题库时，也可选择「<strong>添加到已有题库</strong>」</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF3E0">✏️</div>
+        <div class="acc-meta"><div class="acc-name">编辑 / 删除题目</div><div class="acc-sub">手动修正 AI 生成的题目</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>进入题库详情，点击题目右侧 <strong>编辑</strong> 图标，可修改题干、选项、答案、解析</li>
+        <li>点击 <strong>删除</strong> 图标单题删除</li>
+        <li>可设置题目 <strong>难度（⭐1-5）</strong> 和 <strong>知识点标签</strong>，用于考试筛选</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FCE4EC">📤</div>
+        <div class="acc-meta"><div class="acc-name">导出 / 导入题库</div><div class="acc-sub">备份或与他人共享题库</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>长按题库卡片 → 「<strong>导出题库</strong>」，生成 <code>.sqb</code> 文件（JSON 格式，含所有题目和解析）</li>
+        <li>通过微信、QQ、文件传输等分享给他人</li>
+        <li>他人收到 <code>.sqb</code> 文件后，用拍书题库打开即可 <strong>一键导入</strong></li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8F5E9">⚠️</div>
+        <div class="acc-meta"><div class="acc-name">题目反馈管理</div><div class="acc-sub">查看和处理学生标记的错误</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>学生做题时可对题目提交反馈（题目有误、答案有误等）</li>
+        <li>题库详情右上角出现 <strong>⚠️ 数字徽标</strong>，点击进入反馈管理</li>
+        <li>可选择「<strong>屏蔽该题</strong>」（不再出现）或「<strong>已处理</strong>」</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#F3E5F5">🗑️</div>
+        <div class="acc-meta"><div class="acc-name">删除题库</div><div class="acc-sub">彻底删除题库及所有关联数据</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>长按题库卡片 → 「<strong>删除题库</strong>」</li>
+        <li>级联清除所有题目、错题记录、考试记录，<strong>不可恢复</strong></li>
+        <li>建议删前先导出 <code>.sqb</code> 备份</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">打印试卷</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E3F2FD">🖨️</div>
+        <div class="acc-meta"><div class="acc-name">打印题库 / 试卷</div><div class="acc-sub">一键调用系统打印，支持纸质出卷</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>进入题库详情，点击右上角 <strong>「打印」</strong></li>
+        <li>选「<strong>打印试卷</strong>」（不含答案）或「<strong>打印答案卷</strong>」（含答案与解析）</li>
+        <li>选项根据内容长度 <strong>自动排 1 / 2 / 4 列</strong>，节省纸张</li>
+        <li>支持 <strong>双指缩放</strong> 预览内容</li>
+        <li>每页底部显示版权信息 + 页码（左版权、右页码）</li>
+        <li>调用系统打印，支持 PDF 导出 / 蓝牙 / WiFi 打印机</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">学生管理</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E0F7FA">👥</div>
+        <div class="acc-meta"><div class="acc-name">添加学生账号</div><div class="acc-sub">手动添加或 AI 批量识别花名册</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「报告」→「学生管理」→ <strong>「+ 添加学生」</strong>：手动填写姓名、学号、班级、密码</li>
+        <li>默认密码 <strong>123456</strong>，学生登录后可自行修改</li>
+        <li><strong>AI 批量添加</strong>：拍花名册照片，AI 自动识别姓名批量创建账号，用户名为姓名拼音</li>
+        <li>支持为批量账号设置统一默认密码</li>
+        <li>可编辑学生信息或手动重置密码</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF9C4">📢</div>
+        <div class="acc-meta"><div class="acc-name">广播消息</div><div class="acc-sub">向所有在线学生推送通知</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「学生管理」→ <strong>「广播消息」</strong></li>
+        <li>消息以弹窗形式推送给所有 <strong>当前在线</strong> 的学生</li>
+        <li>适合考试提醒、通知等场景</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8F5E9">🏷️</div>
+        <div class="acc-meta"><div class="acc-name">学生分组</div><div class="acc-sub">为抢答比赛设置分组</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「学生管理」→ 选中学生 → <strong>「设置分组」</strong>，为学生指定组别名称</li>
+        <li>学生注册时也可在「组别」栏自行填写</li>
+        <li>分组信息用于 <strong>抢答比赛</strong> 的组间正确率统计和排行</li>
+        <li>未填写组别的学生在抢答比赛中以个人单独参赛</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">发布与管理考试</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FCE4EC">🏆</div>
+        <div class="acc-meta"><div class="acc-name">发布在线指定考试</div><div class="acc-sub">为指定学生发布强制考试任务</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>进入底部 <strong>「考试」</strong> → 「发布考试」标签</li>
+        <li>选择题库，设置各题型 <strong>数量</strong> 和 <strong>每题分值</strong>（自动计算总分）</li>
+        <li>设置 <strong>考试时长</strong>（分钟）</li>
+        <li>设置 <strong>可交卷时间</strong>：距结束 X 分钟前允许手动交卷，0 = 不允许提前交卷</li>
+        <li>设置 <strong>最高难度</strong>（⭐1-5），只抽取不超过此难度的题目</li>
+        <li>设置 <strong>开考时间</strong>：立即 / 定时（选日期和时间）</li>
+        <li>勾选参与学生（支持全选），点击「<strong>发布 → 在线考试</strong>」</li>
+        <li>学生登录后 <strong>自动进入强制考试</strong>，不可退出</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8F5E9">📄</div>
+        <div class="acc-meta"><div class="acc-name">离线考试（试卷文件）</div><div class="acc-sub">生成试卷，不依赖网络</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>发布时选择「<strong>离线考试</strong>」</li>
+        <li>系统生成试卷文件，通过微信等分享给学生</li>
+        <li>适合无 WiFi 或不需要实时统计的场景</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8EAF6">📊</div>
+        <div class="acc-meta"><div class="acc-name">查看考试进度与成绩</div><div class="acc-sub">实时监控答题状态与排名</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「考试」→「考试列表」查看已发布考试，点击查看每位学生的 <strong>提交状态、得分、正确率</strong></li>
+        <li>「报告」→「做题排名」查看全员历史成绩排名</li>
+        <li>「报告」→ 点击学生卡片查看该学生各题库正确率、错题数</li>
+        <li>「报告」→「错题排名」查看哪道题错误率最高</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF3E0">⚡</div>
+        <div class="acc-meta"><div class="acc-name">抢答比赛</div><div class="acc-sub">实时竞速答题，大屏展示排名</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「考试」→「发布考试」→ 选择题库和题数，点击「<strong>发布 → 抢答比赛</strong>」</li>
+        <li>学生登录后自动进入 <strong>抢答等待界面</strong>，无需手动操作</li>
+        <li>教师在浏览器中打开 <strong>手机IP:8081</strong>（或点击「统计台」链接）进入大屏统计台</li>
+        <li>统计台中选择比赛 → 点击 <strong>「开始比赛」</strong>，再逐题点击「<strong>出题</strong>」向所有学生同步题目</li>
+        <li>学生看到题目后抢先作答；统计台实时展示 <strong>最快答对者</strong>、<strong>各组正确率</strong> 和 <strong>整体排行榜</strong></li>
+        <li>每题结束后点击「<strong>下一题</strong>」继续；所有题目完成后点击「<strong>结束比赛</strong>」显示总结页</li>
+        <li>总结页展示最难题目和学生/小组最终排名；支持 <strong>「重新比赛」</strong> 一键重置后再次开始</li>
+        <li>学生分组：进入「学生管理」为学生设置组别，同组成员成绩合并统计</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">分享题库与考试</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FCE4EC">📤</div>
+        <div class="acc-meta"><div class="acc-name">分享题库给其他教师</div><div class="acc-sub">导出 .sqb 文件，一键共享题库</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>长按题库卡片 → 「<strong>导出题库</strong>」，生成 <code>.sqb</code> 文件（含所有题目、选项、答案与解析）</li>
+        <li>通过微信、QQ、邮件、蓝牙等任意方式发送给对方</li>
+        <li>对方用拍书题库打开 <code>.sqb</code> 文件，即可 <strong>一键导入</strong> 完整题库</li>
+        <li>导入后双方题库 <strong>独立存储</strong>，互不影响</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8F5E9">📄</div>
+        <div class="acc-meta"><div class="acc-name">分享离线试卷给学生</div><div class="acc-sub">无需联网，学生直接在浏览器完成考试</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>「考试」→「发布考试」→ 选择「<strong>离线考试</strong>」</li>
+        <li>系统生成一个 <strong>独立 HTML 试卷文件</strong>，内嵌所有题目和答题逻辑</li>
+        <li>通过微信、QQ、钉钉等将文件发给学生</li>
+        <li>学生用手机或电脑浏览器 <strong>打开文件即可答题</strong>，全程无需联网、无需账号</li>
+        <li>适合 <strong>无 WiFi 环境</strong> 或对网络条件有要求的场景</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8EAF6">🔗</div>
+        <div class="acc-meta"><div class="acc-name">分享在线练习链接</div><div class="acc-sub">发二维码或链接，学生扫码直接答题</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>开启 <strong>「设置」→ 服务器</strong> 开关，确保手机连接 WiFi</li>
+        <li>点击「<strong>分享链接 / 二维码</strong>」，将地址截图或转发给学生</li>
+        <li>学生用同一 WiFi 下的手机 / 电脑浏览器 <strong>扫码或输入链接</strong> 打开</li>
+        <li>注册或用预设账号登录，即可开始练习或参加在线考试</li>
+        <li>若学生不在同一 WiFi，可让学生连接 <strong>教师手机热点</strong> 后访问</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF3E0">📱</div>
+        <div class="acc-meta"><div class="acc-name">分享拍书题库安装包</div><div class="acc-sub">让其他教师也能使用本 App</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>点击页面顶部 <strong>「📦 分享安装包」</strong> 按钮</li>
+        <li>App 自动将安装包复制到缓存目录，弹出系统分享选择器</li>
+        <li>通过微信、QQ、蓝牙等发送给其他 Android 用户</li>
+        <li>对方收到 <code>.apk</code> 文件后，点击安装即可（需允许"安装未知来源应用"）</li>
+        <li>iOS 用户暂不支持，请告知前往官网 <strong>pstk.inc.work</strong> 下载</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">内嵌服务器</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E0F7FA">🌐</div>
+        <div class="acc-meta"><div class="acc-name">开启本地服务器</div><div class="acc-sub">让学生通过浏览器访问答题</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>进入 <strong>「设置」</strong>，开启「服务器」开关</li>
+        <li>确保手机连接 WiFi，学生设备需在 <strong>同一 WiFi</strong>（或连教师热点）</li>
+        <li>点击「<strong>分享链接 / 二维码</strong>」将地址分享给学生</li>
+        <li>支持电脑和手机浏览器访问，无需安装任何软件</li>
+        <li>服务器后台持续运行，锁屏后仍可访问（需关闭省电限制）</li>
+        <li>支持多个 IP 地址同时使用（WiFi + 热点并行）</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="tip tip-warn">⚠️ <strong>注意：</strong>服务器仅限局域网。如需远程访问，可使用内网穿透工具（如 frp、花生壳）。</div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ══════ TAB 3 学生端 ══════ -->
+<div id="tab-student" class="tab-pane">
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">注册与登录</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><span>从老师处获取 <strong>网址或二维码</strong>，用手机 / 电脑浏览器打开</span></div>
+      <div class="step"><div class="step-n">2</div><span>点击 <strong>「注册」</strong>，填写真实姓名、学号（用户名）、班级，设置密码</span></div>
+      <div class="step"><div class="step-n">3</div><span>也可用老师预创建的账号直接登录（用户名 = 姓名拼音，默认密码 123456）</span></div>
+      <div class="step"><div class="step-n">4</div><span>登录后可在「个人信息」页修改密码和个人资料</span></div>
+    </div>
+  </div>
+  <div class="tip tip-info">💡 若老师已发布指定考试，登录后会 <strong>自动跳转到考试界面</strong>，无需手动选择题库。</div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">练习模式</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8F5E9">✏️</div>
+        <div class="acc-meta"><div class="acc-name">自由练习</div><div class="acc-sub">随机出题，即时显示答案解析</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>选择题库 → 「<strong>练习模式</strong>」，设置每次练习题数</li>
+        <li>答题后 <strong>立即显示</strong> 正确答案和解析</li>
+        <li>题目和选项均 <strong>随机打乱</strong> 顺序</li>
+        <li>多选题需勾选所有正确选项后点「确认」；<strong>未选任何选项可直接跳过</strong></li>
+        <li>顶部题号导航栏支持 <strong>左右滑动</strong> 快速跳题</li>
+        <li>答对 <strong>2 次</strong> 后自动移出错题本</li>
+        <li>题目下方显示 <strong>📌 知识点标签</strong>，便于关联复习</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FCE4EC">🔄</div>
+        <div class="acc-meta"><div class="acc-name">错题重练</div><div class="acc-sub">专项复习答错过的题目</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>选择题库 → 「<strong>错题重练</strong>」</li>
+        <li>只练习历史答错过的题目</li>
+        <li>勾选「<strong>包含同知识点其他题目</strong>」：将错题所属知识点的全部相关题目一并练习，举一反三</li>
+        <li>每题右下方显示 <strong>📌 考查知识点</strong> 标签</li>
+        <li>连续答对 2 次后，该题自动移出错题本</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">考试模式</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF3E0">🏆</div>
+        <div class="acc-meta"><div class="acc-name">自主模拟考试</div><div class="acc-sub">定时作答，交卷后查成绩</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>选择题库 → 「<strong>考试模式</strong>」，设置考试时长和题数</li>
+        <li>考试中 <strong>不显示答案</strong>，不可查看解析</li>
+        <li>顶部显示倒计时，时间到 <strong>自动交卷</strong></li>
+        <li>满足最早交卷时间后可手动点「<strong>交卷</strong>」</li>
+        <li>交卷后显示：总分、正确率、用时，以及 <strong>每题详细解析</strong></li>
+        <li>错误题目自动计入错题本</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#E8EAF6">📋</div>
+        <div class="acc-meta"><div class="acc-name">指定考试（老师发布）</div><div class="acc-sub">强制参加，不可中途退出</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>老师发布指定考试后，登录即 <strong>自动进入</strong>，无法跳过</li>
+        <li>考试中 <strong>不可退出</strong>，不可切换题库</li>
+        <li>到达可交卷时间后可点「<strong>交卷</strong>」结束</li>
+        <li>交卷后标记「已完成」，可查看成绩和班级排名</li>
+        <li>定时考试在指定时间自动开放，提前登录显示等待状态</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF3E0">⚡</div>
+        <div class="acc-meta"><div class="acc-name">抢答比赛</div><div class="acc-sub">实时竞速，抢先作答得分</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>老师发布抢答比赛后，登录自动进入 <strong>抢答等待页</strong></li>
+        <li>等待老师出题；题目出现后立即显示，<strong>抢先作答</strong> 提交即可得分</li>
+        <li>每题作答后显示本题是否答对及最快答对者姓名</li>
+        <li>老师进入下一题后当前题目关闭，等待新题目</li>
+        <li>比赛结束后显示个人总得分与班级排名</li>
+        <li>填写了组别的学生还可查看所在小组的整体名次</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">个人中心</div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#F3E5F5">👤</div>
+        <div class="acc-meta"><div class="acc-name">成绩统计与排名</div><div class="acc-sub">查看历次考试和错题情况</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>点击页面用户名 / 头像进入个人中心</li>
+        <li>查看历次考试成绩、总答题数、正确率</li>
+        <li>查看错题列表，按题库分类</li>
+        <li>点击「<strong>排名</strong>」查看班级成绩排行榜</li>
+        <li>修改个人信息（姓名、班级）和密码</li>
+      </ul></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-hd" onclick="acc(this)">
+        <div class="acc-icon" style="background:#FFF9C4">✉️</div>
+        <div class="acc-meta"><div class="acc-name">提交题目反馈</div><div class="acc-sub">发现题目有误时告知老师</div></div>
+        <span class="acc-arr">›</span>
+      </div>
+      <div class="acc-bd"><ul>
+        <li>练习或考试中，点击题目下方 <strong>「反馈」</strong> 按钮</li>
+        <li>选择反馈类型（题目有误 / 答案有误 / 其他）并填写说明</li>
+        <li>老师会在题库管理页看到提示并处理</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="tip tip-ok">✅ <strong>小技巧：</strong>练习时不会的题可直接跳过，通过「错题重练」专项突破薄弱题目。</div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ══════ TAB 4 常见问题 ══════ -->
+<div id="tab-faq" class="tab-pane">
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">题库 &amp; AI 生成</div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">生成题目失败，怎么排查？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">检查「设置 → AI 配置」中 <strong>API Key</strong> 是否正确；如使用国内中转，确认 <strong>Base URL</strong> 无误；确认手机能正常访问 AI 服务。可开启「调试模式」查看详细错误。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">PDF 内容识别不全或乱码？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">新建题库时切换为「<strong>图表公式模式</strong>」，AI 直接读取 PDF 图片，无需 OCR，识别更完整。扫描版 PDF 尤其推荐此模式。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">生成的题目质量不理想？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">在「设置 → AI 配置 → 系统提示词」添加具体要求，如「出高考难度，覆盖所有知识点，计算题占 30%」。也可切换更强大的模型（GPT-4o、deepseek-chat 等）。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">如何生成更多题目？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">新建题库时增大「题目数量」；或生成后点「<strong>继续添加题目</strong>」，上传更多文件或补充提示词，多次追加。</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">服务器 &amp; 网络</div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">抢答统计台（大屏）如何打开？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">发布抢答比赛后，在浏览器中访问 <strong>手机IP:8081</strong>，或点击「考试」列表中的「<strong>统计台</strong>」链接。建议在大屏/电视或教室电脑上打开，效果最佳。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">抢答比赛学生看不到题目？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">确认教师已在统计台点击了 <strong>「开始比赛」</strong> 并且点击了 <strong>「出题」</strong>。题目只有在教师主动出题后才会同步给学生；学生登录后需等待教师操作。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">学生无法访问服务器？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">确认师生设备在 <strong>同一 WiFi</strong>。若教师开了手机热点，学生连热点后可访问。仍不通则在「设置」页重启服务器，或检查手机防火墙 / 安全软件是否拦截端口。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">如何让学生在家远程访问？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">内嵌服务器仅支持局域网。如需远程访问，可使用 <strong>内网穿透</strong>（frp、ngrok、花生壳等）将本地端口暴露到公网。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">关掉 App 后学生还能访问吗？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">服务器作为 <strong>前台服务</strong> 后台持续运行，锁屏后仍可访问。建议将本应用设置为「<strong>不限制后台</strong>」并关闭省电优化，防止系统强制杀掉服务。</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-label">数据 &amp; 账号</div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">如何备份题库数据？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">长按题库卡片 → 「<strong>导出题库</strong>」，将 <code>.sqb</code> 文件保存到网盘。换手机后打开该文件即可恢复。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">学生忘记密码怎么重置？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">教师进入「学生管理」→ 点击该学生 <strong>编辑</strong> → 密码栏填写新密码 → 保存。学生无法自助重置，需教师操作。</div>
+    </div>
+    <div class="faq-item" onclick="faq(this)">
+      <div class="faq-hd"><span class="faq-q-tag">Q</span><span class="faq-q-text">清空考试记录会影响题库吗？</span><span class="faq-arr">›</span></div>
+      <div class="faq-bd">不会。「清空考试记录」只删除历史答题 / 考试数据，<strong>题目本身不受影响</strong>。错题记录也会一并清除。</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;margin-bottom:0">
+    <div class="sec-label">联系我们</div>
+    <div class="contact-row">
+      <span class="c-ico">📧</span><span class="c-lbl">技术支持</span>
+      <span class="c-val"><a href="mailto:183209@qq.com">183209@qq.com</a></span>
+    </div>
+    <div class="contact-row">
+      <span class="c-ico">🌐</span><span class="c-lbl">官网</span>
+      <span class="c-val"><a href="https://pstk.inc.work">pstk.inc.work</a></span>
+    </div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+<script>
+function shareApk(){
+  if(window.Android&&window.Android.shareApk){window.Android.shareApk();}
+  else{alert('请在 App 内使用此功能');}
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function switchRole(role){
+  document.getElementById('roleTeacher').classList.toggle('active',role==='teacher');
+  document.getElementById('roleStudent').classList.toggle('active',role==='student');
+  document.getElementById('guideTeacher').hidden=(role!=='teacher');
+  document.getElementById('guideStudent').hidden=(role!=='student');
+}
+function acc(hd){
+  var bd=hd.nextElementSibling;
+  var isOpen=bd.classList.contains('open');
+  hd.closest('.card').querySelectorAll('.acc-bd.open').forEach(function(b){
+    b.classList.remove('open');
+    b.previousElementSibling.classList.remove('open');
+  });
+  if(!isOpen){bd.classList.add('open');hd.classList.add('open');}
+}
+function faq(item){item.classList.toggle('open');}
+document.addEventListener('click',function(e){
+  var a=e.target.closest('a[href]');
+  if(!a)return;
+  var href=a.getAttribute('href');
+  if(href.startsWith('mailto:')||href.startsWith('http')){
+    e.preventDefault();
+    if(window.Android&&window.Android.openUrl){window.Android.openUrl(href);}
+    else{window.open(href,'_blank');}
+  }
+});
+</script>
+</body>
+</html>
