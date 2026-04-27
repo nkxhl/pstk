@@ -126,6 +126,9 @@ class SettingsFragment : Fragment() {
         ModelPreset("Ollama qwen3.6",             "http://localhost:11434/v1", "qwen3.6",           "qwen3.6",           "key_ollama",  8192),
         ModelPreset("Ollama Gemma4 4B",        "http://localhost:11434/v1", "gemma4:e4b",      "gemma4:e4b",       "key_ollama",  8192),
          ModelPreset("Ollama Gemma4 26B",        "http://localhost:11434/v1", "gemma4:26b",      "gemma4:26b",       "key_ollama",  8192),
+        // scnet.cn（兼容 OpenAI 接口协议）
+        ModelPreset("scnet Qwen3-235B",   "https://api.scnet.cn/api/llm/v1", "Qwen3-235B-A22B", "Qwen3-235B-A22B", "key_scnet", 32000),
+        ModelPreset("scnet MiniMax-M2.5",      "https://api.scnet.cn/api/llm/v1", "MiniMax-M2.5",    "MiniMax-M2.5",    "key_scnet", 32000),
         // aiproxy 代理服务（opt.set.work:5001）
         ModelPreset("aiproxy openrouter",           "http://opt.set.work:5001/v1", "elephant-alpha",                                    "elephant-alpha",                                    "key_aiproxy", 32000),
         ModelPreset("aiproxy Gemini 2.0 Flash",     "http://opt.set.work:5001/v1", "google-ai-studio/gemini-2.0-flash",             "google-ai-studio/gemini-2.0-flash",             "key_aiproxy", 32000),
