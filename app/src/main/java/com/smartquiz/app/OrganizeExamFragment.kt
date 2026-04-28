@@ -677,14 +677,14 @@ class OrganizeExamFragment : Fragment() {
             .setNegativeButton("取消", null).show()
     }
 
-    /** 抢答比赛组卷：题目顺序按 ID 排序，不打乱，选项不打乱 */
+    /** 抢答比赛组卷：随机抽取题目，抽完后按 ID 升序固定顺序，确保每个学生看到相同题目 */
     private fun buildBuzzerQuestions(bankId: Long, maxDiff: Int, typeCounts: String): List<Question> {
         var questions = db.getQuestionsByBank(bankId)
         val blockedIds = db.getBlockedQuestionIds(bankId)
         if (blockedIds.isNotEmpty()) questions = questions.filter { it.id !in blockedIds }
         if (maxDiff in 1..4) questions = questions.filter { it.difficulty <= maxDiff }
-        // 抢答比赛按题目 ID 升序（确保每个学生看到相同题目）
-        questions = questions.sortedBy { it.id }
+        // 随机打乱用于抽题
+        questions = questions.shuffled()
         if (typeCounts.isNotBlank()) {
             val countMap = mutableMapOf<Int, Int>()
             typeCounts.split(",").forEach { entry ->
@@ -703,7 +703,8 @@ class OrganizeExamFragment : Fragment() {
                 }
             }
         }
-        return questions
+        // 抽取后按 ID 升序，确保全班题目顺序一致
+        return questions.sortedBy { it.id }
     }
 
     private fun getLocalIpAddress(): String? {
@@ -790,7 +791,7 @@ class OrganizeExamFragment : Fragment() {
         return questions
     }
 
-    /** 多题库抢答组卷：合并后按 ID 升序，不打乱 */
+    /** 多题库抢答组卷：合并后随机抽取，抽完后按 ID 升序固定顺序，确保全班题目一致 */
     private fun buildBuzzerQuestionsMulti(bankIds: List<Long>, maxDiff: Int, typeCounts: String): List<Question> {
         if (bankIds.isEmpty()) return emptyList()
         if (bankIds.size == 1) return buildBuzzerQuestions(bankIds[0], maxDiff, typeCounts)
@@ -801,7 +802,8 @@ class OrganizeExamFragment : Fragment() {
             qs
         }.distinctBy { it.id }
         if (maxDiff in 1..4) questions = questions.filter { it.difficulty <= maxDiff }
-        questions = questions.sortedBy { it.id }
+        // 随机打乱用于抽题
+        questions = questions.shuffled()
         if (typeCounts.isNotBlank()) {
             val countMap = mutableMapOf<Int, Int>()
             typeCounts.split(",").forEach { entry ->
@@ -820,7 +822,8 @@ class OrganizeExamFragment : Fragment() {
                 }
             }
         }
-        return questions
+        // 抽取后按 ID 升序，确保全班题目顺序一致
+        return questions.sortedBy { it.id }
     }
 
     private fun loadExistingExams() {
