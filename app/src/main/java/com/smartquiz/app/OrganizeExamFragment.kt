@@ -62,6 +62,7 @@ class OrganizeExamFragment : Fragment() {
     private var banks = listOf<QuestionBank>()
     private var allUsers = listOf<User>()
     private val selectedUserIds = mutableSetOf<Long>()
+    private val selectedBankIds = mutableSetOf<Long>()   // 多选题库
     private val typeCountSeekBars = mutableMapOf<Int, SeekBar>()
     private val typeCountTextViews = mutableMapOf<Int, TextView>()
     private val typeScoreEditTexts = mutableMapOf<Int, EditText>()
@@ -176,37 +177,59 @@ class OrganizeExamFragment : Fragment() {
     }
 
     private fun setupBankSpinner(classNames: List<String> = emptyList()) {
-        val names = if (banks.isEmpty()) listOf("暂无题库") else banks.map { "${it.name} (${it.questionCount}题)" }
-        binding.spinnerBank.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, names)
-        binding.spinnerBank.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
-                if (banks.isNotEmpty()) {
-                    binding.etExamName.setText(banks[position].name)
-                    // 切换题库后，在后台查询各题型实际数量并更新滑块上限
-                    val bankId = banks[position].id
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val typeCounts = withContext(Dispatchers.IO) { db.getQuestionCountByType(bankId) }
-                        if (_binding == null) return@launch
-                        bankTypeCountMap.clear()
-                        bankTypeCountMap.putAll(typeCounts)
-                        updateSeekBarMaxByBank()
-                    }
+        if (banks.isEmpty()) {
+            binding.tvBankSelect.text = "暂无题库"
+            return
+        }
+        // 默认选中第一个题库
+        if (selectedBankIds.isEmpty()) {
+            selectedBankIds.add(banks[0].id)
+        }
+        updateBankSelectLabel()
+        binding.tvBankSelect.setOnClickListener { showBankMultiSelectDialog() }
+    }
+
+    /** 刷新题库选择按钮的显示文字，并重新合并各题型数量更新滑块 */
+    private fun updateBankSelectLabel() {
+        val selected = banks.filter { it.id in selectedBankIds }
+        binding.tvBankSelect.text = if (selected.isEmpty()) "点击选择题库（可多选）"
+        else selected.joinToString(" + ") { "${it.name}(${it.questionCount}题)" }
+        // 更新默认考试名称：用第一个题库名
+        if (selected.isNotEmpty()) {
+            binding.etExamName.setText(selected.joinToString("+") { it.name })
+        }
+        // 合并多个题库各题型数量后更新滑块
+        viewLifecycleOwner.lifecycleScope.launch {
+            val merged = mutableMapOf<Int, Int>()
+            for (bank in selected) {
+                val counts = withContext(Dispatchers.IO) { db.getQuestionCountByType(bank.id) }
+                counts.forEach { (type, cnt) -> merged[type] = (merged[type] ?: 0) + cnt }
+            }
+            if (_binding == null) return@launch
+            bankTypeCountMap.clear()
+            bankTypeCountMap.putAll(merged)
+            updateSeekBarMaxByBank()
+        }
+    }
+
+    /** 弹出多选题库对话框 */
+    private fun showBankMultiSelectDialog() {
+        val names = banks.map { "${it.name} (${it.questionCount}题)" }.toTypedArray()
+        val checked = banks.map { it.id in selectedBankIds }.toBooleanArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle("选择题库（可多选）")
+            .setMultiChoiceItems(names, checked) { _, which, isChecked ->
+                if (isChecked) selectedBankIds.add(banks[which].id)
+                else selectedBankIds.remove(banks[which].id)
+            }
+            .setPositiveButton("确定") { _, _ ->
+                if (selectedBankIds.isEmpty() && banks.isNotEmpty()) {
+                    selectedBankIds.add(banks[0].id)
                 }
+                updateBankSelectLabel()
             }
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-        }
-        // 初始化时填入默认名称
-        if (banks.isNotEmpty()) {
-            binding.etExamName.setText(banks[0].name)
-            val bankId = banks[0].id
-            viewLifecycleOwner.lifecycleScope.launch {
-                val typeCounts = withContext(Dispatchers.IO) { db.getQuestionCountByType(bankId) }
-                if (_binding == null) return@launch
-                bankTypeCountMap.clear()
-                bankTypeCountMap.putAll(typeCounts)
-                updateSeekBarMaxByBank()
-            }
-        }
+            .setNegativeButton("取消", null)
+            .show()
     }
 
     /** 根据题库各题型实际数量更新滑块最大值和当前值 */
@@ -530,9 +553,12 @@ class OrganizeExamFragment : Fragment() {
 
     private fun publishExam() {
         if (banks.isEmpty()) { Toast.makeText(requireContext(), "没有可用的题库", Toast.LENGTH_SHORT).show(); return }
+        if (selectedBankIds.isEmpty()) { Toast.makeText(requireContext(), "请选择至少一个题库", Toast.LENGTH_SHORT).show(); return }
 
-        val bank = banks[binding.spinnerBank.selectedItemPosition]
-        val examTitle = binding.etExamName.text?.toString()?.trim()?.takeIf { it.isNotBlank() } ?: bank.name
+        val selectedBanks = banks.filter { it.id in selectedBankIds }
+        val primaryBank = selectedBanks.first()
+        val bankName = selectedBanks.joinToString("+") { it.name }
+        val examTitle = binding.etExamName.text?.toString()?.trim()?.takeIf { it.isNotBlank() } ?: bankName
         val timeMinutes = binding.seekTimeMinutes.progress
         val submitBeforeEnd = binding.seekSubmitBefore.progress
         val maxDiff = binding.seekMaxDiff.progress
@@ -549,18 +575,17 @@ class OrganizeExamFragment : Fragment() {
 
         when (binding.rgExamMode.checkedRadioButtonId) {
             R.id.rbModeOffline ->
-                publishOfflineExam(bank, examTitle, timeMinutes, maxDiff, typeCounts, finalTypeScores, totalScore)
+                publishOfflineExam(primaryBank, bankName, examTitle, timeMinutes, maxDiff, typeCounts, finalTypeScores, totalScore)
             R.id.rbModeBuzzer ->
-                publishBuzzerContest(bank, examTitle, timeMinutes, maxDiff, typeCounts, finalTypeScores, totalScore)
+                publishBuzzerContest(primaryBank, bankName, examTitle, timeMinutes, maxDiff, typeCounts, finalTypeScores, totalScore)
             else ->
-                publishOnlineExam(bank, timeMinutes, submitBeforeEnd, maxDiff, typeCounts, finalTypeScores, questionTypes, limitCount, totalScore)
+                publishOnlineExam(primaryBank, bankName, examTitle, timeMinutes, submitBeforeEnd, maxDiff, typeCounts, finalTypeScores, questionTypes, limitCount, totalScore)
         }
     }
 
-    private fun publishOnlineExam(bank: QuestionBank, timeMinutes: Int, submitBeforeEnd: Int, maxDiff: Int, typeCounts: String, typeScores: String, questionTypes: String, limitCount: Int, totalScore: Int) {
+    private fun publishOnlineExam(primaryBank: QuestionBank, bankName: String, examTitle: String, timeMinutes: Int, submitBeforeEnd: Int, maxDiff: Int, typeCounts: String, typeScores: String, questionTypes: String, limitCount: Int, totalScore: Int) {
         if (selectedUserIds.isEmpty()) { Toast.makeText(requireContext(), "请至少选择一名学生", Toast.LENGTH_SHORT).show(); return }
         val scheduleText = if (scheduledStartTime > 0L) TimeUtils.formatTime(scheduledStartTime) else "立即开考"
-        // 计算自动交卷时间：开考时间 + 考试时长（开考时间为0时以当前时间计算）
         val autoSubmitAt: Long = if (isAutoSubmit && timeMinutes > 0) {
             val startBase = if (scheduledStartTime > 0L) scheduledStartTime else System.currentTimeMillis()
             startBase + timeMinutes * 60 * 1000L
@@ -568,13 +593,13 @@ class OrganizeExamFragment : Fragment() {
 
         AlertDialog.Builder(requireContext())
             .setTitle("确认发布在线考试")
-            .setMessage("题库：${bank.name}\n学生：${selectedUserIds.size} 人\n考试时长：${timeMinutes}分钟\n可交卷：${if (submitBeforeEnd > 0) "最后${submitBeforeEnd}分钟" else "不允许手动交卷"}\n最高难度：⭐${maxDiff}\n开考时间：${scheduleText}${if (isAutoSubmit) "\n到时自动交卷：是" else ""}\n试卷总分：${totalScore}分\n\n学生登录后将进入强制考试模式。")
+            .setMessage("题库：${bankName}\n学生：${selectedUserIds.size} 人\n考试时长：${timeMinutes}分钟\n可交卷：${if (submitBeforeEnd > 0) "最后${submitBeforeEnd}分钟" else "不允许手动交卷"}\n最高难度：⭐${maxDiff}\n开考时间：${scheduleText}${if (isAutoSubmit) "\n到时自动交卷：是" else ""}\n试卷总分：${totalScore}分\n\n学生登录后将进入强制考试模式。")
             .setPositiveButton("发布") { _, _ ->
-                val fixedQuestions = buildExamQuestions(bank.id, maxDiff, typeCounts)
+                val fixedQuestions = buildExamQuestionsMulti(selectedBankIds.toList(), maxDiff, typeCounts)
                 val questionIds = fixedQuestions.joinToString(",") { it.id.toString() }
 
                 val examId = db.createAssignedExam(
-                    bankId = bank.id, bankName = bank.name, limitCount = limitCount,
+                    bankId = primaryBank.id, bankName = bankName, limitCount = limitCount,
                     timeMinutes = timeMinutes, maxDiff = maxDiff, shuffleOpts = true, shuffleQ = true,
                     questionTypes = questionTypes, typeCounts = typeCounts, typeScores = typeScores,
                     submitBeforeEndMinutes = submitBeforeEnd, scheduledStartTime = scheduledStartTime,
@@ -588,8 +613,8 @@ class OrganizeExamFragment : Fragment() {
             .setNegativeButton("取消", null).show()
     }
 
-    private fun publishOfflineExam(bank: QuestionBank, examTitle: String, timeMinutes: Int, maxDiff: Int, typeCounts: String, typeScores: String, totalScore: Int) {
-        val fixedQuestions = buildExamQuestions(bank.id, maxDiff, typeCounts)
+    private fun publishOfflineExam(primaryBank: QuestionBank, bankName: String, examTitle: String, timeMinutes: Int, maxDiff: Int, typeCounts: String, typeScores: String, totalScore: Int) {
+        val fixedQuestions = buildExamQuestionsMulti(selectedBankIds.toList(), maxDiff, typeCounts)
         if (fixedQuestions.isEmpty()) {
             Toast.makeText(requireContext(), "没有符合条件的题目", Toast.LENGTH_SHORT).show()
             return
@@ -603,13 +628,13 @@ class OrganizeExamFragment : Fragment() {
         )
     }
 
-    private fun publishBuzzerContest(bank: QuestionBank, examTitle: String, timeMinutes: Int, maxDiff: Int, typeCounts: String, typeScores: String, totalScore: Int) {
+    private fun publishBuzzerContest(primaryBank: QuestionBank, bankName: String, examTitle: String, timeMinutes: Int, maxDiff: Int, typeCounts: String, typeScores: String, totalScore: Int) {
         if (selectedUserIds.isEmpty()) {
             Toast.makeText(requireContext(), "请至少选择一名学生", Toast.LENGTH_SHORT).show()
             return
         }
         // 抢答比赛：题目顺序和选项顺序固定，不打乱
-        val fixedQuestions = buildBuzzerQuestions(bank.id, maxDiff, typeCounts)
+        val fixedQuestions = buildBuzzerQuestionsMulti(selectedBankIds.toList(), maxDiff, typeCounts)
         if (fixedQuestions.isEmpty()) {
             Toast.makeText(requireContext(), "没有符合条件的题目", Toast.LENGTH_SHORT).show()
             return
@@ -623,7 +648,7 @@ class OrganizeExamFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("確认发布抢答比赛")
             .setMessage(
-                "题库：${bank.name}\n" +
+                "题库：${bankName}\n" +
                 "题目数：${fixedQuestions.size} 题\n" +
                 "学生：${selectedUserIds.size} 人\n\n" +
                 "抢答比赛中所有学生看到相同题目\n" +
@@ -631,7 +656,7 @@ class OrganizeExamFragment : Fragment() {
             )
             .setPositiveButton("发布") { _, _ ->
                 val examId = db.createAssignedExam(
-                    bankId = bank.id, bankName = bank.name, limitCount = limitCount,
+                    bankId = primaryBank.id, bankName = bankName, limitCount = limitCount,
                     timeMinutes = timeMinutes, maxDiff = maxDiff,
                     shuffleOpts = false, shuffleQ = false,
                     questionTypes = questionTypes, typeCounts = typeCounts,
@@ -728,6 +753,73 @@ class OrganizeExamFragment : Fragment() {
             }
         }
 
+        return questions
+    }
+
+    /** 多题库组卷（在线/离线考试）：从多个题库合并后随机抽题 */
+    private fun buildExamQuestionsMulti(bankIds: List<Long>, maxDiff: Int, typeCounts: String): List<Question> {
+        if (bankIds.isEmpty()) return emptyList()
+        if (bankIds.size == 1) return buildExamQuestions(bankIds[0], maxDiff, typeCounts)
+        // 合并多题库题目，去重（不同题库可能有重复 id，但通常不会）
+        var questions = bankIds.flatMap { bid ->
+            var qs = db.getQuestionsByBank(bid)
+            val blocked = db.getBlockedQuestionIds(bid)
+            if (blocked.isNotEmpty()) qs = qs.filter { it.id !in blocked }
+            qs
+        }.distinctBy { it.id }
+        if (maxDiff in 1..4) questions = questions.filter { it.difficulty <= maxDiff }
+        questions = questions.shuffled()
+        if (typeCounts.isNotBlank()) {
+            val countMap = mutableMapOf<Int, Int>()
+            typeCounts.split(",").forEach { entry ->
+                val parts = entry.split(":")
+                if (parts.size == 2) {
+                    val typeCode = parts[0].trim().toIntOrNull()
+                    val count = parts[1].trim().toIntOrNull()
+                    if (typeCode != null && count != null && count > 0) countMap[typeCode] = count
+                }
+            }
+            if (countMap.isNotEmpty()) {
+                val grouped = questions.groupBy { it.type.code }
+                questions = countMap.flatMap { (typeCode, count) ->
+                    val typeQuestions = grouped[typeCode] ?: emptyList()
+                    if (typeQuestions.size > count) typeQuestions.take(count) else typeQuestions
+                }
+            }
+        }
+        return questions
+    }
+
+    /** 多题库抢答组卷：合并后按 ID 升序，不打乱 */
+    private fun buildBuzzerQuestionsMulti(bankIds: List<Long>, maxDiff: Int, typeCounts: String): List<Question> {
+        if (bankIds.isEmpty()) return emptyList()
+        if (bankIds.size == 1) return buildBuzzerQuestions(bankIds[0], maxDiff, typeCounts)
+        var questions = bankIds.flatMap { bid ->
+            var qs = db.getQuestionsByBank(bid)
+            val blocked = db.getBlockedQuestionIds(bid)
+            if (blocked.isNotEmpty()) qs = qs.filter { it.id !in blocked }
+            qs
+        }.distinctBy { it.id }
+        if (maxDiff in 1..4) questions = questions.filter { it.difficulty <= maxDiff }
+        questions = questions.sortedBy { it.id }
+        if (typeCounts.isNotBlank()) {
+            val countMap = mutableMapOf<Int, Int>()
+            typeCounts.split(",").forEach { entry ->
+                val parts = entry.split(":")
+                if (parts.size == 2) {
+                    val typeCode = parts[0].trim().toIntOrNull()
+                    val count = parts[1].trim().toIntOrNull()
+                    if (typeCode != null && count != null && count > 0) countMap[typeCode] = count
+                }
+            }
+            if (countMap.isNotEmpty()) {
+                val grouped = questions.groupBy { it.type.code }
+                questions = countMap.flatMap { (typeCode, count) ->
+                    val typeQuestions = grouped[typeCode] ?: emptyList()
+                    if (typeQuestions.size > count) typeQuestions.take(count) else typeQuestions
+                }
+            }
+        }
         return questions
     }
 
