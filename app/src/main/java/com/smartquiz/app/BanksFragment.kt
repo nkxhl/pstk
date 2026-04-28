@@ -771,6 +771,8 @@ class BanksFragment : Fragment() {
                     putExtra(Intent.EXTRA_STREAM, uri)
                     putExtra(Intent.EXTRA_SUBJECT, "题库分享：${bank.name}")
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    // 鸿蒙/MIUI 等定制系统需要 clipData 才能授权 content:// URI
+                    clipData = android.content.ClipData.newRawUri("题库分享", uri)
                 }
                 startActivity(Intent.createChooser(shareIntent, "分享题库「${bank.name}」"))
             } catch (e: Exception) {
@@ -785,13 +787,15 @@ class BanksFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val json = withContext(Dispatchers.IO) {
-                    requireContext().contentResolver.openInputStream(uri)?.use { input ->
-                        try {
-                            GZIPInputStream(input).bufferedReader(Charsets.UTF_8).use { it.readText() }
-                        } catch (e: java.util.zip.ZipException) {
-                            // 兼容未压缩的旧文件
-                            requireContext().contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }
+                    val bytes = requireContext().contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                    if (bytes == null || bytes.isEmpty()) return@withContext null
+                    try {
+                        java.io.ByteArrayInputStream(bytes).let { bais ->
+                            GZIPInputStream(bais).bufferedReader(Charsets.UTF_8).use { it.readText() }
                         }
+                    } catch (e: java.util.zip.ZipException) {
+                        // 兼容未压缩的旧文件
+                        bytes.toString(Charsets.UTF_8)
                     }
                 }
                 if (json.isNullOrBlank()) {

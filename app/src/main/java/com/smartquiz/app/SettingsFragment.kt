@@ -356,13 +356,49 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        prefs.edit().putBoolean("server_was_running", true).apply()
+        // 鸿蒙系统提示：需手动授权后台运行和局域网访问
+        if (isHarmonyOs()) {
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("鸿蒙系统特别提示")
+                .setMessage(
+                    "鸿蒙系统默认会阻止应用监听局域网端口，可能导致其他设备无法访问 Web 服务。\n\n" +
+                    "请按以下步骤授权：\n" +
+                    "① 手机「设置」→「应用」→「拍书题库」→「电池」→ 开启「无限制」\n" +
+                    "② 同页面「权限」→ 开启「局域网」（部分机型显示为「WLAN」）\n\n" +
+                    "授权后重新启动 Web 服务即可正常使用。"
+                )
+                .setPositiveButton("去授权") { _, _ ->
+                    try {
+                        val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = android.net.Uri.fromParts("package", requireContext().packageName, null)
+                        }
+                        startActivity(intent)
+                    } catch (_: Exception) { }
+                }
+                .setNegativeButton("忽略，继续启动") { _, _ -> doStartServer(port) }
+                .show()
+            return
+        }
 
+        doStartServer(port)
+    }
+
+    private fun doStartServer(port: Int) {
+        prefs.edit().putBoolean("server_was_running", true).apply()
         val intent = Intent(requireContext(), WebServerService::class.java).apply {
             putExtra(WebServerService.EXTRA_PORT, port)
         }
         requireContext().startForegroundService(intent)
         binding.root.postDelayed({ updateServerStatus() }, 600)
+    }
+
+    /** 检测是否为华为鸿蒙系统 */
+    private fun isHarmonyOs(): Boolean = try {
+        Class.forName("com.huawei.system.BuildEx")
+            .getMethod("getOsBrand")
+            .invoke(null)?.toString()?.equals("harmony", ignoreCase = true) == true
+    } catch (_: Exception) {
+        android.os.Build.MANUFACTURER.equals("HUAWEI", ignoreCase = true)
     }
 
     private fun stopServer() {

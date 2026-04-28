@@ -162,8 +162,20 @@ class MainActivity : AppCompatActivity() {
         if (uri == null) return
 
         // 判断文件类型：图片/PDF/WORD/TXT/MD → 询问生成题库；.sqb → 导入题库
+        // 鸿蒙/MIUI 的 content:// URI lastPathSegment 可能取不到文件名，
+        // 使用 ContentResolver.query 读取真实的 DISPLAY_NAME 作为兜底
         val mime = contentResolver.getType(uri) ?: ""
-        val name = uri.lastPathSegment?.lowercase() ?: ""
+        val rawName = uri.lastPathSegment?.lowercase() ?: ""
+        val displayName: String = if (rawName.contains('.')) {
+            rawName
+        } else {
+            try {
+                contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+                    if (cursor.moveToFirst()) cursor.getString(0).lowercase() else ""
+                } ?: ""
+            } catch (_: Exception) { "" }
+        }
+        val name = displayName.ifBlank { rawName }
         val isDocument = mime.startsWith("image/") ||
                 mime == "application/pdf" ||
                 mime == "application/msword" ||
@@ -171,9 +183,11 @@ class MainActivity : AppCompatActivity() {
                 mime == "text/plain" || mime == "text/markdown" ||
                 name.endsWith(".txt") || name.endsWith(".md") ||
                 name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx")
+        // 明确是 .sqb 则强制走导入，不受 mime 干扰
+        val isSqb = name.endsWith(".sqb")
 
         binding.root.post {
-            if (isDocument) {
+            if (!isSqb && isDocument) {
                 showSharedDocumentDialog(uri)
             } else {
                 confirmAndImportBank(uri)

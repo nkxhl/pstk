@@ -52,6 +52,8 @@ object OfflineExamHelper {
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_SUBJECT, "离线考试：$title")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            // 鸿蒙/MIUI 等定制系统需要 clipData 才能授权 content:// URI
+            clipData = android.content.ClipData.newRawUri("离线考试", uri)
         }
         context.startActivity(Intent.createChooser(intent, "分享离线考试「$title」"))
     }
